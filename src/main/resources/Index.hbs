@@ -1,0 +1,30 @@
+<html>
+<head>
+    <title>Http4k JSON to Kotlin Data class converter</title>
+</head>
+<style>
+    .error {
+        color: red
+    }
+    textarea {
+        width: 90%;
+        min-height: 300px;
+        font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;
+    }
+</style>
+<body>
+{{#if error}}
+    <li class="error">{{error}}</li>
+{{/if}}
+
+<form method="POST">
+    <textarea name="input">{{input}}</textarea>
+    <br/>
+    <button>Convert JSON to Kotlin</button>
+</form>
+{{#if output}}
+    <hr/>
+    <textarea contenteditable="false">{{output}}</textarea>
+{{/if}}
+</body>
+</html>
