@@ -37,8 +37,8 @@ object App {
 
         val form = Body.webForm(FormValidator.Feedback, inputField).toLens()
         val app = routes(
-            "/" to GET bind { _: Request -> Response(OK).body(templates(Index())) },
-            "/" to POST bind { request: Request ->
+            "/" bind GET to { _: Request -> Response(OK).body(templates(Index())) },
+            "/" bind POST to { request: Request ->
                 val formInstance = form(request)
                 val baos = ByteArrayOutputStream()
 
