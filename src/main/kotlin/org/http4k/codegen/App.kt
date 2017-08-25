@@ -92,7 +92,8 @@ object App {
 
                     val convertToJson = Filter { next ->
                         {
-                            next(it.body(Jackson.compact(JacksonXml.mapper.readTree(input.asXmlString()))))
+                            val newBody = Jackson.compact(JacksonXml.mapper.readTree(input.asXmlString()))
+                            next(it.body(newBody.replace("\"\":", "\"text\":")))
                         }
                     }
 
