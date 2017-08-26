@@ -15,12 +15,12 @@ import org.http4k.core.Status.Companion.OK
 import org.http4k.core.then
 import org.http4k.core.with
 import org.http4k.filter.GenerateDataClasses
+import org.http4k.filter.GenerateXmlDataClasses
 import org.http4k.format.Jackson
 import org.http4k.format.Jackson.asPrettyJsonString
 import org.http4k.format.Jackson.json
-import org.http4k.format.JacksonXml
-import org.http4k.format.JacksonXml.asXmlString
-import org.http4k.format.JacksonXml.xml
+import org.http4k.format.Xml.asXmlString
+import org.http4k.format.Xml.xml
 import org.http4k.lens.FormField
 import org.http4k.lens.FormValidator
 import org.http4k.lens.Header
@@ -90,16 +90,9 @@ object App {
                 val response = if (formInstance.errors.isEmpty()) {
                     val input = inputField(formInstance)
 
-                    val convertToJson = Filter { next ->
-                        {
-                            val newBody = Jackson.compact(JacksonXml.mapper.readTree(input.asXmlString()))
-                            next(it.body(newBody.replace("\"\":", "\"text\":")))
-                        }
-                    }
-
                     ByteArrayOutputStream().use {
-                        convertToJson.then(GenerateDataClasses(Jackson, PrintStream(it)))
-                            .then { Response(OK).body(it.bodyString()) }(request)
+                        GenerateXmlDataClasses(PrintStream(it))
+                            .then { Response(OK).body(input.asXmlString()) }(request)
                         val output = String(it.toByteArray(), UTF_8)
                         templates(Xml(input.asXmlString(), output))
                     }
