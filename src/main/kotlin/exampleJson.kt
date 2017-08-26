@@ -9,7 +9,8 @@ val json = """{"jsonRoot":{"child":["hello","there"],"number":123}}"""
 
 // results in this...
 data class Base(val jsonRoot: JsonRoot?)
-data class JsonRoot(val child: List<String>?, val number: Number?)
+data class JsonRoot(val child: List<String>?,
+                    val number: Number?)
 
 // use the lens like this
 fun main(args: Array<String>) {
@@ -17,9 +18,11 @@ fun main(args: Array<String>) {
 
     val request = Request(GET, "/somePath").body(json)
 
-    val e: Base = lens.extract(request)
+    val extracted: Base = lens.extract(request)
 
-    println(e)
+    println(extracted)
 
-    println(lens.inject(e, Request(GET, "/somePath")).bodyString())
+    val injected = lens.inject(extracted, Request(GET, "/somePath"))
+
+    println(injected.bodyString())
 }
