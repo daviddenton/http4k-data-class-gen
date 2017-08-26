@@ -38,7 +38,7 @@ import java.nio.charset.StandardCharsets.UTF_8
 
 object App {
     operator fun invoke(): HttpHandler {
-        val templates = HandlebarsTemplates().CachingClasspath()
+        val templates = if(System.getenv("DEVMODE") != null)  HandlebarsTemplates().HotReload("src/main/resources") else HandlebarsTemplates().CachingClasspath()
 
         val app = routes(
             "/json" bind json(templates),
