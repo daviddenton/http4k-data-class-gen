@@ -6,12 +6,12 @@ import org.http4k.core.Request
 import org.http4k.format.Jackson.auto
 
 // this JSON...
-val json = """{"jsonRoot":{"child":["hello","there"],"number":123}}"""
+val json = """{"jsonRoot":{"child":["hello","there"],"num":123}}"""
 
 // results in these data classes...
 data class Base(val jsonRoot: JsonRoot?)
 data class JsonRoot(val child: List<String>?,
-                    val number: Number?)
+                    val num: Number?)
 
 // use the lens like this
 fun main(args: Array<String>) {
