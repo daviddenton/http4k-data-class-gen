@@ -19,7 +19,6 @@ data class XmlChild110601346(val num: Number?, val content: String?)
 
 data class XmlRoot(val XmlChild: List<XmlChild110601346>?)
 
-
 // use the lens like this
 fun main(args: Array<String>) {
     val lens = Body.auto<XmlBase>().toLens()
@@ -29,5 +28,4 @@ fun main(args: Array<String>) {
     val extracted: XmlBase = lens.extract(request)
 
     println(extracted)
-
 }
