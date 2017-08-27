@@ -1,8 +1,8 @@
 package org.http4k.codegen
 
+import GenerateFromJson
+import GenerateFromXml
 import Index
-import Json
-import Xml
 import org.http4k.core.Body
 import org.http4k.core.ContentType
 import org.http4k.core.Filter
@@ -16,9 +16,9 @@ import org.http4k.core.then
 import org.http4k.core.with
 import org.http4k.filter.GenerateDataClasses
 import org.http4k.filter.GenerateXmlDataClasses
-import org.http4k.format.Jackson
-import org.http4k.format.Jackson.asPrettyJsonString
-import org.http4k.format.Jackson.json
+import org.http4k.format.Gson
+import org.http4k.format.Gson.asPrettyJsonString
+import org.http4k.format.Gson.json
 import org.http4k.format.Xml.asXmlString
 import org.http4k.format.Xml.xml
 import org.http4k.lens.FormField
@@ -57,7 +57,7 @@ object App {
 
     private fun json(templates: TemplateRenderer): RoutingHttpHandler =
         routes(
-            GET to { _: Request -> Response(OK).body(templates(Json())) },
+            GET to { _: Request -> Response(OK).body(templates(GenerateFromJson())) },
             POST to { request: Request ->
                 val inputField = FormField.json().required("input")
 
@@ -67,12 +67,12 @@ object App {
                 val response = if (formInstance.errors.isEmpty()) {
                     val input = inputField(formInstance)
                     ByteArrayOutputStream().use {
-                        GenerateDataClasses(Jackson, PrintStream(it)).then { Response(OK).body(input.asPrettyJsonString()) }(request)
+                        GenerateDataClasses(Gson, PrintStream(it)).then { Response(OK).body(input.asPrettyJsonString()) }(request)
                         val output = String(it.toByteArray(), UTF_8)
-                        templates(Json(input.asPrettyJsonString(), output))
+                        templates(GenerateFromJson(input.asPrettyJsonString(), output))
                     }
                 } else {
-                    templates(Json(formInstance.fields["input"]?.joinToString() ?: "", error = "invalid input"))
+                    templates(GenerateFromJson(formInstance.fields["input"]?.joinToString() ?: "", error = "invalid input"))
                 }
                 Response(OK).body(response)
             }
@@ -80,7 +80,7 @@ object App {
 
     private fun xml(templates: TemplateRenderer): RoutingHttpHandler =
         routes(
-            GET to { _: Request -> Response(OK).body(templates(Xml())) },
+            GET to { _: Request -> Response(OK).body(templates(GenerateFromXml())) },
             POST to { request: Request ->
                 val inputField = FormField.xml().required("input")
 
@@ -94,10 +94,10 @@ object App {
                         GenerateXmlDataClasses(PrintStream(it))
                             .then { Response(OK).body(input.asXmlString()) }(request)
                         val output = String(it.toByteArray(), UTF_8)
-                        templates(Xml(input.asXmlString(), output))
+                        templates(GenerateFromXml(input.asXmlString(), output))
                     }
                 } else {
-                    templates(Xml(formInstance.fields["input"]?.joinToString() ?: "", error = "invalid input"))
+                    templates(GenerateFromXml(formInstance.fields["input"]?.joinToString() ?: "", error = "invalid input"))
                 }
                 Response(OK).body(response)
             }
