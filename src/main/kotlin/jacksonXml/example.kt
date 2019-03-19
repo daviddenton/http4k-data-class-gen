@@ -1,9 +1,9 @@
-package xml
+package jacksonXml
 
 import org.http4k.core.Body
 import org.http4k.core.Method
 import org.http4k.core.Request
-import org.http4k.format.Xml.auto
+import org.http4k.format.JacksonXml.auto
 
 // this XML...
 val xml = """<XmlRoot>
@@ -20,7 +20,7 @@ data class XmlChild110601346(val num: Number?, val content: String?)
 data class XmlRoot(val XmlChild: List<XmlChild110601346>?)
 
 // use the lens like this
-fun main(args: Array<String>) {
+fun main() {
     val lens = Body.auto<XmlBase>().toLens()
 
     val request = Request(Method.GET, "/somePath").body(xml)

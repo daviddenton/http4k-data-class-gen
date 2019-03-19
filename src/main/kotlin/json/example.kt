@@ -14,7 +14,7 @@ data class JsonRoot(val child: List<String>?,
                     val num: Number?)
 
 // use the lens like this
-fun main(args: Array<String>) {
+fun main() {
     val lens = Body.auto<Base>().toLens()
 
     val request = Request(GET, "/somePath").body(json)
