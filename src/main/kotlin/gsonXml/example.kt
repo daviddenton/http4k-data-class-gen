@@ -1,4 +1,4 @@
-package xml
+package gsonXml
 
 import org.http4k.core.Body
 import org.http4k.core.Method
